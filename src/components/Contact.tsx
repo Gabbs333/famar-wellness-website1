@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Phone, Mail, MapPin, Facebook, Instagram } from 'lucide-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export default function Contact() {
   const [formData, setFormData] = useState({

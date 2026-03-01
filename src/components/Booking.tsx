@@ -57,9 +57,8 @@ export default function Booking() {
     setError(null);
 
     try {
-      // Use direct Netlify function URL for now
-      // TODO: Change back to /api/book once redirections are working
-      const apiUrl = '/.netlify/functions/book';
+      // Use Vercel API endpoint
+      const apiUrl = '/api/book';
       console.log('Calling API URL:', apiUrl);
       
       const response = await fetch(apiUrl, {

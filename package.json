@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx server-supabase.ts",
+    "dev": "node dev-server.js",
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "vercel-dev": "vercel dev"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.98.0",

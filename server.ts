@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import serverless from 'serverless-http';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || '3000', 10);
 
 // Supabase client
 const supabaseUrl = process.env.SUPABASE_URL || '';
