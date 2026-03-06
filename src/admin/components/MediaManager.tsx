@@ -257,6 +257,7 @@ const MediaManager: React.FC<MediaManagerProps> = ({
               filename: fileName.split('/').pop() || file.name,
               original_filename: file.name,
               file_path: fileName,
+              storage_path: fileName,
               file_size: file.size,
               mime_type: file.type,
               uploaded_by: null,
