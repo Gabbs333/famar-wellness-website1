@@ -337,6 +337,63 @@ const VisualPageEditor: React.FC<VisualPageEditorProps> = ({
           </footer>
         `
       });
+
+      // Modal Popup Block
+      bm.add('modal-popup', {
+        label: 'Fenêtre Modal',
+        category: 'Modals',
+        content: `
+          <div class="modal-trigger" style="padding: 40px; text-align: center; background: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; cursor: pointer;">
+            <p style="margin: 0; color: #6b7280;">Cliquez pour ajouter le contenu de la fenêtre modale</p>
+            <button style="margin-top: 15px; padding: 10px 25px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer;">Ouvrir Modal</button>
+          </div>
+          <div class="modal-content" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+            <div style="background: white; padding: 40px; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative;">
+              <button style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">×</button>
+              <h2 style="margin-top: 0; font-size: 1.8rem; margin-bottom: 20px;">Titre de la Modal</h2>
+              <p style="color: #6b7280; line-height: 1.6;">Contenu de votre fenêtre modale...</p>
+              <button style="margin-top: 20px; padding: 12px 30px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer;">Appel à l'action</button>
+            </div>
+          </div>
+        `
+      });
+
+      // Callback Modal Block
+      bm.add('callback-modal', {
+        label: 'Modal Rappel',
+        category: 'Modals',
+        content: `
+          <div class="callback-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+            <div style="background: white; padding: 40px; border-radius: 12px; max-width: 450px; width: 90%; position: relative;">
+              <button style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">×</button>
+              <h2 style="margin-top: 0; font-size: 1.5rem; margin-bottom: 10px; color: #1f2937;">Demandez un rappel</h2>
+              <p style="color: #6b7280; margin-bottom: 20px; font-size: 0.95rem;">Laissez votre numéro et nous vous rappelons!</p>
+              <input type="text" placeholder="Votre nom" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; margin-bottom: 12px; font-size: 1rem;">
+              <input type="tel" placeholder="Votre téléphone" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; margin-bottom: 12px; font-size: 1rem;">
+              <button style="width: 100%; padding: 14px; background: #10b981; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;">Me rappeler</button>
+            </div>
+          </div>
+        `
+      });
+
+      // Newsletter Modal Block
+      bm.add('newsletter-modal', {
+        label: 'Modal Newsletter',
+        category: 'Modals',
+        content: `
+          <div class="newsletter-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+            <div style="background: white; padding: 40px; border-radius: 12px; max-width: 500px; width: 90%; text-align: center; position: relative;">
+              <button style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">×</button>
+              <div style="font-size: 3rem; margin-bottom: 15px;">📧</div>
+              <h2 style="margin-top: 0; font-size: 1.5rem; margin-bottom: 10px; color: #1f2937;">Abonnez-vous à notre newsletter</h2>
+              <p style="color: #6b7280; margin-bottom: 25px; font-size: 0.95rem;">Recevez nos conseils santé et nos offres spéciales!</p>
+              <input type="email" placeholder="Votre email" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; margin-bottom: 12px; font-size: 1rem;">
+              <button style="width: 100%; padding: 14px; background: #10b981; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer;">S'abonner</button>
+              <p style="margin-top: 15px; font-size: 0.8rem; color: #9ca3af;">Pas de spam, désabonnement possible</p>
+            </div>
+          </div>
+        `
+      });
     };
 
     // Initialize GrapesJS
@@ -394,14 +451,14 @@ const VisualPageEditor: React.FC<VisualPageEditorProps> = ({
           
           // Upload to Supabase Storage
           const { data, error } = await supabase.storage
-            .from('cms-media')
+            .from('cms-images')
             .upload(filePath, file);
           
           if (error) throw error;
           
           // Get public URL
           const { data: urlData } = supabase.storage
-            .from('cms-media')
+            .from('cms-images')
             .getPublicUrl(filePath);
           
           // Add to asset manager
@@ -451,13 +508,13 @@ const VisualPageEditor: React.FC<VisualPageEditorProps> = ({
                 const filePath = `editor/${fileName}`;
                 
                 const { data, error } = await supabase.storage
-                  .from('cms-media')
+                  .from('cms-images')
                   .upload(filePath, file);
                 
                 if (error) throw error;
                 
                 const { data: urlData } = supabase.storage
-                  .from('cms-media')
+                  .from('cms-images')
                   .getPublicUrl(filePath);
                 
                 component.set({ src: urlData.publicUrl });
@@ -628,13 +685,13 @@ const VisualPageEditor: React.FC<VisualPageEditorProps> = ({
                     const filePath = `editor/${fileName}`;
                     
                     const { data, error } = await supabase.storage
-                      .from('cms-media')
+                      .from('cms-images')
                       .upload(filePath, file);
                     
                     if (error) throw error;
                     
                     const { data: urlData } = supabase.storage
-                      .from('cms-media')
+                      .from('cms-images')
                       .getPublicUrl(filePath);
                     
                     // Add to asset manager and select it
@@ -650,7 +707,7 @@ const VisualPageEditor: React.FC<VisualPageEditorProps> = ({
                     editorRef.current.openAsset();
                   } catch (error) {
                     console.error('Error uploading image:', error);
-                    alert('Erreur lors de l\'upload. Assurez-vous que le bucket \"cms-media\" existe dans Supabase.');
+                    alert('Erreur lors de l\'upload. Assurez-vous que le bucket \"cms-images\" existe dans Supabase.');
                   } finally {
                     setUploading(false);
                   }
