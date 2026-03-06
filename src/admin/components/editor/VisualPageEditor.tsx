@@ -4,6 +4,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import grapesjs from 'grapesjs';
 import 'grapesjs/dist/css/grapes.min.css';
+import { supabase } from '../../../lib/supabase';
 
 interface VisualPageEditorProps {
   initialHtml?: string;
@@ -23,6 +24,7 @@ const VisualPageEditor: React.FC<VisualPageEditorProps> = ({
   const editorRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   // Initialize GrapesJS editor
   useEffect(() => {
@@ -31,6 +33,30 @@ const VisualPageEditor: React.FC<VisualPageEditorProps> = ({
     // Define custom blocks for the website
     const defineBlocks = (editor: any) => {
       const bm = editor.BlockManager;
+
+      // Image upload block with upload functionality
+      bm.add('image-upload', {
+        label: 'Image avec Upload',
+        category: 'Media',
+        attributes: { class: 'gjs-fonts gjs-f-image' },
+        content: {
+          type: 'image',
+          style: {
+            'max-width': '100%',
+            height: 'auto',
+            'min-height': '200px'
+          },
+          src: 'https://via.placeholder.com/800x400?text=Cliquez+pour+ajouter+une+image',
+          attributes: { 
+            alt: 'Image',
+            'data-uploaded': 'false'
+          }
+        },
+        // Make image clickable to upload
+        onClick: () => {
+          // This will be handled by the traits
+        }
+      });
 
       // Hero Section Block
       bm.add('hero-section', {
@@ -336,7 +362,116 @@ const VisualPageEditor: React.FC<VisualPageEditorProps> = ({
       traitManager: {
         appendTo: '#traits-panel'
       },
-      selectorManager: { appendTo: '#selectors-panel' }
+      selectorManager: { appendTo: '#selectors-panel' },
+      assetManager: {
+        embedAsBase64: false,
+        assets: []
+      }
+    });
+
+    // Add custom image upload to asset manager
+    const am = editor.AssetManager;
+    
+    // Create custom upload button
+    const uploadBtn = document.createElement('button');
+    uploadBtn.innerHTML = '📤 Uploader une image';
+    uploadBtn.className = 'gjs-am-upload-btn';
+    uploadBtn.style.cssText = 'width: 100%; padding: 10px; margin-bottom: 10px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;';
+    uploadBtn.onclick = async () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = async (e: any) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        setUploading(true);
+        try {
+          // Generate unique filename
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+          const filePath = `editor/${fileName}`;
+          
+          // Upload to Supabase Storage
+          const { data, error } = await supabase.storage
+            .from('cms-media')
+            .upload(filePath, file);
+          
+          if (error) throw error;
+          
+          // Get public URL
+          const { data: urlData } = supabase.storage
+            .from('cms-media')
+            .getPublicUrl(filePath);
+          
+          // Add to asset manager
+          am.add([{
+            src: urlData.publicUrl,
+            type: 'image',
+            height: 400,
+            width: 800
+          }]);
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          alert('Erreur lors de l\'upload de l\'image. Vérifiez votre connexion Supabase.');
+        } finally {
+          setUploading(false);
+        }
+      };
+      input.click();
+    };
+    
+    // Add upload button to asset manager panel
+    const amContainer = document.querySelector('.gjs-am');
+    if (amContainer) {
+      amContainer.insertBefore(uploadBtn, amContainer.firstChild);
+    }
+
+    // Add double-click to upload image functionality
+    editor.on('component:selected', (component: any) => {
+      if (component.get('type') === 'image') {
+        const imgEl = component.getEl();
+        if (imgEl) {
+          imgEl.style.cursor = 'pointer';
+          imgEl.title = 'Double-cliquez pour changer l\'image';
+          
+          imgEl.ondblclick = async (e: any) => {
+            e.stopPropagation();
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = async (e: any) => {
+              const file = e.target.files[0];
+              if (!file) return;
+              
+              setUploading(true);
+              try {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+                const filePath = `editor/${fileName}`;
+                
+                const { data, error } = await supabase.storage
+                  .from('cms-media')
+                  .upload(filePath, file);
+                
+                if (error) throw error;
+                
+                const { data: urlData } = supabase.storage
+                  .from('cms-media')
+                  .getPublicUrl(filePath);
+                
+                component.set({ src: urlData.publicUrl });
+              } catch (error) {
+                console.error('Error uploading image:', error);
+                alert('Erreur lors de l\'upload de l\'image');
+              } finally {
+                setUploading(false);
+              }
+            };
+            input.click();
+          };
+        }
+      }
     });
 
     // Define custom blocks
@@ -361,7 +496,7 @@ const VisualPageEditor: React.FC<VisualPageEditorProps> = ({
         editorRef.current = null;
       }
     };
-  }, []);
+  }, [initialHtml, initialCss]);
 
   // Handle save
   const handleSave = useCallback(() => {
@@ -439,13 +574,98 @@ const VisualPageEditor: React.FC<VisualPageEditorProps> = ({
 
       {/* Editor Container */}
       <div className="editor-container" style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        {/* Left Panel - Blocks */}
-        <div id="blocks-panel" style={{
-          width: '250px',
+        {/* Left Panel - Blocks & Upload */}
+        <div style={{
+          width: '280px',
           background: '#f9fafb',
           borderRight: '1px solid #e5e7eb',
-          overflow: 'auto'
-        }} />
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          {/* Image Upload Section */}
+          <div style={{ padding: '15px', borderBottom: '1px solid #e5e7eb' }}>
+            <h3 style={{ margin: '0 0 10px 0', fontSize: '0.85rem', color: '#6b7280', textTransform: 'uppercase', fontWeight: 600 }}>
+              Médias
+            </h3>
+            <label style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              padding: '12px',
+              background: uploading ? '#d1d5db' : '#10b981',
+              color: 'white',
+              borderRadius: '6px',
+              cursor: uploading ? 'not-allowed' : 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: 500,
+              transition: 'background 0.2s'
+            }}>
+              {uploading ? (
+                <>
+                  <span className="animate-spin" style={{ display: 'inline-block', width: '16px', height: '16px', border: '2px solid white', borderTopColor: 'transparent', borderRadius: '50%' }} />
+                  Upload en cours...
+                </>
+              ) : (
+                <>
+                  <span>📤</span>
+                  Uploader une image
+                </>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                disabled={uploading}
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file || !editorRef.current) return;
+                  
+                  setUploading(true);
+                  try {
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+                    const filePath = `editor/${fileName}`;
+                    
+                    const { data, error } = await supabase.storage
+                      .from('cms-media')
+                      .upload(filePath, file);
+                    
+                    if (error) throw error;
+                    
+                    const { data: urlData } = supabase.storage
+                      .from('cms-media')
+                      .getPublicUrl(filePath);
+                    
+                    // Add to asset manager and select it
+                    const am = editorRef.current.AssetManager;
+                    am.add([{
+                      src: urlData.publicUrl,
+                      type: 'image',
+                      height: 400,
+                      width: 800
+                    }]);
+                    
+                    // Open asset manager
+                    editorRef.current.openAsset();
+                  } catch (error) {
+                    console.error('Error uploading image:', error);
+                    alert('Erreur lors de l\'upload. Assurez-vous que le bucket \"cms-media\" existe dans Supabase.');
+                  } finally {
+                    setUploading(false);
+                  }
+                }}
+                style={{ display: 'none' }}
+              />
+            </label>
+            <p style={{ margin: '8px 0 0', fontSize: '0.75rem', color: '#9ca3af' }}>
+              Cliquez puis glissez l'image dans la page
+            </p>
+          </div>
+          
+          {/* Blocks Panel */}
+          <div id="blocks-panel" style={{ flex: 1, overflow: 'auto' }} />
+        </div>
 
         {/* Main Editor Area */}
         <div style={{ flex: 1, position: 'relative' }}>
