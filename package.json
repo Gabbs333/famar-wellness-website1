@@ -26,6 +26,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "googleapis": "^144.0.0",
+    "grapesjs": "^0.22.14",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.460.0",
     "motion": "^11.11.17",

@@ -4,12 +4,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageEditor from '../components/editor/PageEditor';
+import VisualPageEditor from '../components/editor/VisualPageEditor';
 import { supabase, CmsPage } from '../../lib/supabase';
 
 const Pages: React.FC = () => {
   const [showEditor, setShowEditor] = useState(false);
   const [selectedPage, setSelectedPage] = useState<CmsPage | null>(null);
   const [selectedPageHtml, setSelectedPageHtml] = useState<string>('');
+  const [selectedPageCss, setSelectedPageCss] = useState<string>('');
+  const [useVisualEditor, setUseVisualEditor] = useState(true); // Use visual editor by default
   const [pages, setPages] = useState<CmsPage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -101,8 +104,21 @@ const Pages: React.FC = () => {
   const draftCount = pages.filter(p => !p.published).length;
 
   // Gérer la sauvegarde d'une page
-  const handleSavePage = async (content: string, metadata: any) => {
+  const handleSavePage = async (content: string, cssOrMetadata: string | any, components?: any) => {
     try {
+      // Déterminer si c'est来自于 le visual editor (HTML + CSS) ou le text editor (HTML + metadata)
+      let html = content;
+      let css = '';
+      let metadata: any = {};
+      
+      if (typeof cssOrMetadata === 'string' && components !== undefined) {
+        // Visual editor: content = html, cssOrMetadata = css
+        css = cssOrMetadata;
+      } else {
+        // Text editor: content = html, cssOrMetadata = metadata
+        metadata = cssOrMetadata;
+      }
+
       // Utiliser les valeurs existantes si non fournies
       const title = metadata.title || selectedPage?.title || 'Nouvelle page';
       const slug = metadata.slug || selectedPage?.slug || generateSlug(title);
@@ -111,7 +127,8 @@ const Pages: React.FC = () => {
         title,
         slug,
         description: metadata.excerpt || selectedPage?.description || null,
-        content: content, // Stocker le HTML directement
+        content: html, // Stocker le HTML directement
+        css: css, // Stocker le CSS pour le visual editor
         meta_title: metadata.seoTitle || selectedPage?.meta_title || null,
         meta_description: metadata.seoDescription || selectedPage?.meta_description || null,
         meta_keywords: metadata.seoKeywords || selectedPage?.meta_keywords || null,
@@ -149,8 +166,21 @@ const Pages: React.FC = () => {
   };
 
   // Gérer la publication d'une page
-  const handlePublishPage = async (content: string, metadata: any) => {
+  const handlePublishPage = async (content: string, cssOrMetadata: string | any, components?: any) => {
     try {
+      // Déterminer si c'est来自于 le visual editor (HTML + CSS) ou le text editor (HTML + metadata)
+      let html = content;
+      let css = '';
+      let metadata: any = {};
+      
+      if (typeof cssOrMetadata === 'string' && components !== undefined) {
+        // Visual editor: content = html, cssOrMetadata = css
+        css = cssOrMetadata;
+      } else {
+        // Text editor: content = html, cssOrMetadata = metadata
+        metadata = cssOrMetadata;
+      }
+
       // Utiliser les valeurs existantes si non fournies
       const title = metadata.title || selectedPage?.title || 'Nouvelle page';
       const slug = metadata.slug || selectedPage?.slug || generateSlug(title);
@@ -159,7 +189,8 @@ const Pages: React.FC = () => {
         title,
         slug,
         description: metadata.excerpt || selectedPage?.description || null,
-        content: content, // Stocker le HTML directement
+        content: html, // Stocker le HTML directement
+        css: css, // Stocker le CSS pour le visual editor
         meta_title: metadata.seoTitle || selectedPage?.meta_title || null,
         meta_description: metadata.seoDescription || selectedPage?.meta_description || null,
         meta_keywords: metadata.seoKeywords || selectedPage?.meta_keywords || null,
@@ -233,7 +264,10 @@ const Pages: React.FC = () => {
   const handleEditPage = (page: CmsPage) => {
     // Convertir le contenu JSON en HTML pour l'éditeur
     const htmlContent = jsonToHtml(page.content);
+    // Extraire le CSS du contenu (si disponible)
+    const cssContent = (page as any).css || '';
     setSelectedPageHtml(htmlContent);
+    setSelectedPageCss(cssContent);
     setSelectedPage(page);
     setShowEditor(true);
   };
@@ -243,6 +277,7 @@ const Pages: React.FC = () => {
     setShowEditor(false);
     setSelectedPage(null);
     setSelectedPageHtml('');
+    setSelectedPageCss('');
     fetchPages(); // Rafraîchir la liste
   };
 
@@ -290,22 +325,32 @@ const Pages: React.FC = () => {
             </button>
           </div>
 
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <PageEditor
-              pageId={selectedPage?.id}
-              pageTitle={selectedPage?.title || 'Nouvelle page'}
-              initialContent={selectedPageHtml}
-              initialSlug={selectedPage?.slug || ''}
-              initialDescription={selectedPage?.description || ''}
-              initialSeoTitle={selectedPage?.meta_title || ''}
-              initialSeoDescription={selectedPage?.meta_description || ''}
-              initialSeoKeywords={selectedPage?.meta_keywords || []}
-              initialFeaturedImage={selectedPage?.featured_image || ''}
-              initialStatus={selectedPage?.published ? 'published' : 'draft'}
-              onSave={handleSavePage}
-              onPublish={handlePublishPage}
-              autoSaveInterval={30000}
-            />
+          <div className="bg-white rounded-lg shadow-lg p-4" style={{ height: 'calc(100vh - 200px)' }}>
+            {useVisualEditor ? (
+              <VisualPageEditor
+                pageTitle={selectedPage?.title || 'Nouvelle page'}
+                initialHtml={selectedPageHtml}
+                initialCss={selectedPageCss}
+                onSave={handleSavePage}
+                onPublish={handlePublishPage}
+              />
+            ) : (
+              <PageEditor
+                pageId={selectedPage?.id}
+                pageTitle={selectedPage?.title || 'Nouvelle page'}
+                initialContent={selectedPageHtml}
+                initialSlug={selectedPage?.slug || ''}
+                initialDescription={selectedPage?.description || ''}
+                initialSeoTitle={selectedPage?.meta_title || ''}
+                initialSeoDescription={selectedPage?.meta_description || ''}
+                initialSeoKeywords={selectedPage?.meta_keywords || []}
+                initialFeaturedImage={selectedPage?.featured_image || ''}
+                initialStatus={selectedPage?.published ? 'published' : 'draft'}
+                onSave={handleSavePage}
+                onPublish={handlePublishPage}
+                autoSaveInterval={30000}
+              />
+            )}
           </div>
         </div>
       ) : (

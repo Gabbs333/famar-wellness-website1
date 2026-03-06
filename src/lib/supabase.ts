@@ -64,6 +64,7 @@ export interface CmsPage {
   slug: string;
   description: string | null;
   content: string | Record<string, any> | null; // HTML ou JSON
+  css: string | null; // Custom CSS from visual editor
   meta_title: string | null;
   meta_description: string | null;
   meta_keywords: string[] | null;
