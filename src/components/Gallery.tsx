@@ -26,7 +26,7 @@ const galleryItems = [
   },
   {
     id: 4,
-    src: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773016105237_WhatsApp%20Image%202026-03-05%20at%2012.06.46.jpeg",
+    src: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015759386_WhatsApp%20Image%202026-02-17%20at%2019.44.23%20(1).jpeg",
     category: "Équipement",
     title: "Thérapie par Andullation",
     description: "Une technologie vibratoire unique pour soulager les douleurs chroniques et le stress."

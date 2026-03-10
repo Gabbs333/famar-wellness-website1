@@ -175,17 +175,17 @@ const massages = [
   { 
     name: "Pieds et Mains", 
     description: "Nos extrémités portent tout notre stress. Ce massage procure une sensation de légèreté incroyable.",
-    image: "https://images.unsplash.com/photo-1611094605642-9979b1b909c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   { 
     name: "Massage Femme Enceinte", 
     description: "Un moment de douceur pour maman et bébé. Soulage le dos et les jambes lourdes en toute sécurité.",
-    image: "https://images.unsplash.com/photo-1555819206-7b30da4f1506?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1591343395082-e120087004b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   { 
     name: "Massage Deep-Tissue", 
     description: "Pour les tensions installées depuis longtemps. Un massage puissant qui va chercher les nœuds en profondeur.",
-    image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
   },
   { 
     name: "Massage Sportif", 
