@@ -8,7 +8,7 @@ import 'react-day-picker/dist/style.css';
 
 const services = [
     "Massothérapie Manuelle",
-    "Massage Sportif",
+    "Massage Relaxant",
     "Analyse du Dos",
     "Analyse du Dos + Massothérapie",
     "Analyse + Thérapie par Andullation",
