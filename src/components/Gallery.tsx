@@ -5,45 +5,45 @@ import { X, ZoomIn, Camera } from 'lucide-react';
 const galleryItems = [
   {
     id: 1,
-    src: "https://images.unsplash.com/photo-1600334129128-685c5582fd35?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    src: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015799505_WhatsApp%20Image%202026-02-19%20at%2018.42.22%20(1).jpeg",
     category: "Cabinet",
-    title: "Espace de Détente",
-    description: "Un cadre apaisant et moderne conçu pour votre relaxation totale au cœur de Bastos."
+    title: "Espace d'accueil",
+    description: "Un cadre apaisant et moderne conçu pour votre relaxation et santé totale au cœur de Bastos."
   },
   {
     id: 2,
-    src: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    src: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015995493_WhatsApp%20Image%202026-02-19%20at%2018.42.25%20(1).jpeg",
     category: "Équipement",
-    title: "Technologie I-Motion EMS",
-    description: "L'électrostimulation de pointe pour renforcer vos muscles et sculpter votre silhouette."
+    title: "Technologie Lipo Laser et Andullation",
+    description: "Notre combinaison technologique unique pour la perte de poids rapide, durable et naturelle"
   },
   {
     id: 3,
-    src: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    src: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015995493_WhatsApp%20Image%202026-02-19%20at%2018.42.26%20(1).jpeg",
     category: "Soins",
-    title: "Massothérapie Manuelle",
+    title: "Salle de Massothérapie et de consultation",
     description: "Des mains expertes pour soulager vos tensions et revitaliser votre corps."
   },
   {
     id: 4,
-    src: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    src: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773016105237_WhatsApp%20Image%202026-03-05%20at%2012.06.46.jpeg",
     category: "Équipement",
     title: "Thérapie par Andullation",
     description: "Une technologie vibratoire unique pour soulager les douleurs chroniques et le stress."
   },
   {
     id: 5,
-    src: "https://images.unsplash.com/photo-1591343395082-e21b17927612?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    src: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015799505_WhatsApp%20Image%202026-02-19%20at%2018.42.24%20(1).jpeg",
     category: "Cabinet",
     title: "Salle de Soin Privée",
     description: "Intimité et confort garantis pour une expérience thérapeutique personnalisée."
   },
   {
     id: 6,
-    src: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    category: "Soins",
-    title: "Suivi Personnalisé",
-    description: "Analyse posturale et plan de traitement sur-mesure avec nos experts."
+    src: "https://dvjzkijpcpdjbdbzkbfr.supabase.co/storage/v1/object/public/cms-images/uploads/1773015995493_WhatsApp%20Image%202026-02-19%20at%2018.42.29%20(1)%20(1).jpeg",
+    category: "Espace",
+    title: "Accueil Chaleureux",
+    description: "Recevez ici l'accueil que vous méritez bien en tant que nos patients de marque"
   }
 ];
 

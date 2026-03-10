@@ -29,8 +29,8 @@ export default function About() {
               <span className="w-10 h-[1px] bg-teal-600"></span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-              Un cabinet de <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-lime-600">santé</span> qui revolucionne
-              <br />la massotherapie
+              Un cabinet de <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-lime-600">santé</span> qui revolutionne
+              <br />la massothérapie
             </h2>
           </div>
 
@@ -48,7 +48,7 @@ export default function About() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">Cabinet de Santé</h3>
               <p className="text-gray-600 leading-relaxed">
-                Contrairement aux cabins de massage classiques axés uniquement sur le bien-être, FamarWellness est <strong className="text-teal-700">prioritairement un cabinet de santé</strong>, puis de bien-être. Nous traitons les pathologies, soulageons les douleurs et thérapeutisons le corps.
+                Contrairement aux cabinets de massage classiques axés uniquement sur le bien-être, FamarWellness est <strong className="text-teal-700">prioritairement un cabinet de santé</strong>, puis de bien-être. Nous traitons les pathologies, soulageons les douleurs et thérapeutisons le corps.
               </p>
             </motion.div>
 
