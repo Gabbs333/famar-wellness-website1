@@ -13,6 +13,7 @@ import Gallery from './components/Gallery';
 import Testimonials from './components/Testimonials';
 import Booking from './components/Booking';
 import Contact from './components/Contact';
+import Pricing from './components/Pricing';
 import LegalNotice from './components/LegalNotice';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import Sitemap from './components/Sitemap';
@@ -137,6 +138,14 @@ const SitemapPage = () => (
   </>
 );
 
+const PricingPage = () => (
+  <>
+    <div className="pt-20">
+      <Pricing />
+    </div>
+  </>
+);
+
 export default function App() {
   return (
     <AuthProvider>
@@ -168,6 +177,7 @@ export default function App() {
               <Route path="/galerie" element={<GalleryPage />} />
               <Route path="/temoignages" element={<TestimonialsPage />} />
               <Route path="/reservation" element={<BookingPage />} />
+              <Route path="/tarifs" element={<PricingPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/mentions-legales" element={<LegalNoticePage />} />
               <Route path="/politique-confidentialite" element={<PrivacyPolicyPage />} />
